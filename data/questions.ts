@@ -6,7 +6,7 @@
 // 是為了避免受測者從字面猜出「哪個答案比較政治正確」而照著選，
 // 藉此讓作答更接近真實行為傾向，而不是理想答案。
 
-export const QUIZ_TITLE = "森林裡，你是哪一種動物爸媽？";
+export const QUIZ_TITLE = "你是哪一種動物爸媽？";
 
 export type ParentingStyleCode =
   | "helicopter"
@@ -100,7 +100,7 @@ export interface QuizQuestion {
 export const QUESTIONS: QuizQuestion[] = [
   {
     id: "q1",
-    text: "【挑戰一：築巢】幼獸怎麼都叼不穩樹枝，急得直跳腳。",
+    text: "【築巢】幼獸怎麼都叼不穩樹枝，急得直跳腳。",
     options: [
       {
         id: "q1-a",
@@ -136,7 +136,7 @@ export const QUESTIONS: QuizQuestion[] = [
   },
   {
     id: "q2",
-    text: "【挑戰二：莓果】幼獸看見別隻動物手上的大莓果，尖叫著非要不可。",
+    text: "【莓果】幼獸看見別隻動物手上的大莓果，尖叫著非要不可。",
     options: [
       {
         id: "q2-a",
@@ -172,7 +172,7 @@ export const QUESTIONS: QuizQuestion[] = [
   },
   {
     id: "q3",
-    text: "【挑戰三：水窪】幼獸被同伴推開，跌坐在水窪邊。",
+    text: "【水窪】幼獸被同伴推開，跌坐在水窪邊。",
     options: [
       {
         id: "q3-a",
@@ -208,7 +208,7 @@ export const QUESTIONS: QuizQuestion[] = [
   },
   {
     id: "q4",
-    text: "【挑戰四：挑食】幼獸聞了聞堅果，推開不吃，只肯吃某種漿果。",
+    text: "【挑食】幼獸聞了聞堅果，推開不吃，只肯吃某種漿果。",
     options: [
       {
         id: "q4-a",
@@ -244,7 +244,7 @@ export const QUESTIONS: QuizQuestion[] = [
   },
   {
     id: "q5",
-    text: "【挑戰五：老樹】幼獸盯著一棵高聳的老樹，躍躍欲試。",
+    text: "【老樹】幼獸盯著一棵高聳的老樹，躍躍欲試。",
     options: [
       {
         id: "q5-a",
@@ -280,7 +280,7 @@ export const QUESTIONS: QuizQuestion[] = [
   },
   {
     id: "q6",
-    text: "【挑戰六：樹枝】兩隻幼獸搶著同一根樹枝，拉扯尖叫。",
+    text: "【樹枝】兩隻幼獸搶著同一根樹枝，拉扯尖叫。",
     options: [
       {
         id: "q6-a",
@@ -316,7 +316,7 @@ export const QUESTIONS: QuizQuestion[] = [
   },
   {
     id: "q7",
-    text: "【挑戰七：倒塌】幼獸辛苦堆的巢倒塌，挫折地尖叫、踢散樹枝。",
+    text: "【倒塌】幼獸辛苦堆的巢倒塌，挫折地尖叫、踢散樹枝。",
     options: [
       {
         id: "q7-a",
@@ -352,7 +352,7 @@ export const QUESTIONS: QuizQuestion[] = [
   },
   {
     id: "q8",
-    text: "【挑戰八：入夜】天色已暗，幼獸還在巢外跳來跳去不肯睡。",
+    text: "【入夜】天色已暗，幼獸還在巢外跳來跳去不肯睡。",
     options: [
       {
         id: "q8-a",

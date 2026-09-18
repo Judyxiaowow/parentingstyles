@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "森林裡，你是哪一種動物爸媽？",
+  title: "你是哪一種動物爸媽？",
   description: "育兒風格測驗：回答 8 題森林情境題，取得 AI 個人化分析。",
 };
 

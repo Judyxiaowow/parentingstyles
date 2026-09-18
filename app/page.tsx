@@ -392,9 +392,7 @@ function LandingScreen({ onStart }: { onStart: () => void }) {
           {QUIZ_TITLE}
         </h1>
         <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-stone-500 sm:text-base">
-          你是森林裡的一位動物家長，正陪著一隻幼獸長大。接下來會遇到
-          {QUESTIONS.length} 個森林挑戰——你的直覺反應，會透露你藏在心底的教養慣性，
-          AI 會為你生成專屬的個人化分析與客觀建議。
+          你正要陪你的幼獸穿越森林，途中會遇到 {QUESTIONS.length} 個挑戰阻礙你們前進。
         </p>
         <div className="mx-auto mt-8 max-w-xs">
           <PrimaryButton onClick={onStart}>開始測驗，找出我的動物型</PrimaryButton>
