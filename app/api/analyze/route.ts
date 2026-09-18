@@ -15,7 +15,14 @@ import { InvalidAnswersError, scoreAnswers } from "@/lib/scoreAnswers";
 // getOpenAIClient) never reaches the client bundle.
 
 const OPENAI_MODEL = process.env.OPENAI_MODEL ?? "gpt-4o-mini";
-const MAX_RESULT_CHARS = 300;
+const MAX_RESULT_CHARS = 2000;
+
+interface AnalysisSections {
+  analysis: string;
+  evaluation: string;
+  suggestions: string;
+  activity: string;
+}
 
 interface AnalyzeSuccessResponse {
   status: "success";
@@ -23,7 +30,10 @@ interface AnalyzeSuccessResponse {
     resultType: ParentingStyleCode;
     styleName: string;
     scores: Record<ParentingStyleCode, number>;
+    // result：四個段落拼接後的完整文字，供 /api/leads 存檔與匯出使用。
     result: string;
+    // sections：拆開的段落，前端排版用（分析／綜合評價／建議／親子活動）。
+    sections: AnalysisSections;
   };
 }
 
@@ -65,10 +75,10 @@ export async function POST(
   const style = PARENTING_STYLES[resultType];
 
   try {
-    const result = await generateAnalysis({ scores, style });
+    const { result, sections } = await generateAnalysis({ scores, style });
     return NextResponse.json({
       status: "success",
-      data: { resultType, styleName: style.name, scores, result },
+      data: { resultType, styleName: style.name, scores, result, sections },
     });
   } catch (err) {
     const message = toReadableErrorMessage(err);
@@ -83,7 +93,7 @@ async function generateAnalysis({
 }: {
   scores: Record<ParentingStyleCode, number>;
   style: ParentingStyleInfo;
-}): Promise<string> {
+}): Promise<{ result: string; sections: AnalysisSections }> {
   const client = getOpenAIClient();
 
   const scoreBreakdown = (Object.entries(scores) as [ParentingStyleCode, number][])
@@ -94,15 +104,34 @@ async function generateAnalysis({
   const completion = await client.chat.completions.create({
     model: OPENAI_MODEL,
     temperature: 0.7,
-    max_tokens: 600,
+    max_tokens: 3000,
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "parenting_style_analysis",
+        strict: true,
+        schema: {
+          type: "object",
+          properties: {
+            analysis: { type: "string", description: "針對此人育兒風格傾向的分析" },
+            evaluation: { type: "string", description: "一句綜合評價，給予正向鼓勵" },
+            suggestions: { type: "string", description: "具體、可執行且待改善的客觀建議" },
+            activity: { type: "string", description: "適合此人與孩子的親子小活動" },
+          },
+          required: ["analysis", "evaluation", "suggestions", "activity"],
+          additionalProperties: false,
+        },
+      },
+    },
     messages: [
       {
         role: "system",
         content:
-          "你是親職教育顧問，會根據使用者在育兒風格測驗中的作答傾向撰寫繁體中文分析。" +
-          "內容需包含：對此人育兒風格傾向的分析、一句綜合評價，以及具體、可執行的客觀建議。" +
+          "你是親職教育顧問，會根據使用者在育兒風格測驗中的作答傾向撰寫繁體中文分析，並拆成四個獨立段落回傳：" +
+          "analysis（對此人育兒風格傾向的分析）、evaluation（一句綜合評價，給予正向鼓勵）、" +
+          "suggestions（具體、可執行且待改善的客觀建議）、activity（針對建議提供適合此人與孩子的小活動）。" +
           "語氣中立、客觀、不批判、不說教，不要使用「你很糟糕」之類的否定字眼。" +
-          `全文（含標點）不得超過 ${MAX_RESULT_CHARS} 字，直接輸出分析內容本身，不要加標題、前綴或 markdown 符號。`,
+          `四個段落加總的全文字數（含標點）不得超過 ${MAX_RESULT_CHARS} 字，每個段落各自是完整、可獨立閱讀的一段文字，不要加標題、前綴或 markdown 符號。`,
       },
       {
         role: "user",
@@ -117,13 +146,38 @@ async function generateAnalysis({
     ],
   });
 
-  const text = completion.choices[0]?.message?.content?.trim();
-  if (!text) {
+  const raw = completion.choices[0]?.message?.content?.trim();
+  if (!raw) {
     throw new Error("OpenAI 未回傳任何分析內容，請稍後再試一次。");
   }
 
+  let parsed: Partial<AnalysisSections>;
+  try {
+    parsed = JSON.parse(raw) as Partial<AnalysisSections>;
+  } catch {
+    throw new Error("OpenAI 回傳的內容格式不正確，請稍後再試一次。");
+  }
+
+  const sections: AnalysisSections = {
+    analysis: parsed.analysis?.trim() ?? "",
+    evaluation: parsed.evaluation?.trim() ?? "",
+    suggestions: parsed.suggestions?.trim() ?? "",
+    activity: parsed.activity?.trim() ?? "",
+  };
+
+  if (!sections.analysis && !sections.evaluation && !sections.suggestions && !sections.activity) {
+    throw new Error("OpenAI 未回傳任何分析內容，請稍後再試一次。");
+  }
+
+  const combined = [sections.analysis, sections.evaluation, sections.suggestions, sections.activity]
+    .filter(Boolean)
+    .join("\n\n");
+
   // 字數上限是硬性規格，不能只靠 prompt 約束模型行為，這裡做保險截斷。
-  return text.length > MAX_RESULT_CHARS ? `${text.slice(0, MAX_RESULT_CHARS - 1)}…` : text;
+  const result =
+    combined.length > MAX_RESULT_CHARS ? `${combined.slice(0, MAX_RESULT_CHARS - 1)}…` : combined;
+
+  return { result, sections };
 }
 
 function toReadableErrorMessage(err: unknown): string {

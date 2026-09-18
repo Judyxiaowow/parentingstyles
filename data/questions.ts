@@ -7,10 +7,10 @@ export const QUIZ_TITLE = "你是哪種育兒風格的人？";
 export type ParentingStyleCode =
   | "helicopter"
   | "lawnmower"
+  | "tiger"
+  | "permissive"
   | "gentle"
-  | "freeRange"
-  | "techParenting"
-  | "intensive";
+  | "uninvolved";
 
 export interface ParentingStyleInfo {
   name: string;
@@ -29,50 +29,50 @@ export const PARENTING_STYLES: Record<ParentingStyleCode, ParentingStyleInfo> = 
   helicopter: {
     name: "直升機育兒",
     englishName: "Helicopter",
-    coreBehavior: "高度監控，密集的介入學業、人際與日常選擇。",
-    benefits: "孩子安全感強、照顧周到、少走彎路。",
-    risks: "降低孩子的抗壓性（Resilience），成年後焦慮感與依賴性偏高。",
-    suggestion: "退後一步：從「掌控者」轉為「諮詢者」，允許孩子承擔小失敗。",
+    coreBehavior: "高度監控，密集介入孩子的每個選擇與動作，隨時在旁糾正、代勞。",
+    benefits: "孩子感受到高度關注與安全感，照顧細膩周到。",
+    risks: "孩子缺乏獨立嘗試與犯錯的機會，容易缺乏自信、抗壓性偏低。",
+    suggestion: "練習「退後一步」：先觀察，等孩子真的求助再介入，把糾正換成提問。",
   },
   lawnmower: {
     name: "割草機育兒",
     englishName: "Lawnmower",
-    coreBehavior: "主動幫孩子清空前面所有的障礙與挫折。",
-    benefits: "短期內孩子生活順遂，衝突極少。",
-    risks: "剝奪挫折忍受力（Frustration Tolerance），遇困難易放棄。",
-    suggestion: "忍住不插手：陪伴孩子經歷情緒，教導「如何解決問題」而非代勞。",
+    coreBehavior: "主動預先清除孩子可能遇到的困難與挫折，確保一路暢行無阻。",
+    benefits: "孩子少走彎路，短期內挫折與衝突較少。",
+    risks: "剝奪孩子練習面對挫折、解決問題的機會，遇到無法預先清除的困難時容易崩潰。",
+    suggestion: "忍住不代勞，讓孩子經歷小挫折，陪他一起想辦法而不是直接幫他解決。",
+  },
+  tiger: {
+    name: "虎式育兒",
+    englishName: "Tiger",
+    coreBehavior: "高標準、重紀律，常用責罵、威脅或處罰要求孩子立即服從。",
+    benefits: "短期內孩子行為快速符合要求，規矩明確。",
+    risks: "孩子容易因恐懼而順從而非理解，長期可能影響親子信任與情緒調節能力。",
+    suggestion: "把命令換成「說明＋選擇」，用溫和但堅定的語氣取代責罵與威脅。",
+  },
+  permissive: {
+    name: "討好型育兒",
+    englishName: "Permissive",
+    coreBehavior: "為了讓孩子停止哭鬧或避免衝突，經常妥協、順從，也較少主動設定或堅持規則。",
+    benefits: "親子當下氣氛和緩，衝突發生的頻率較低。",
+    risks: "孩子難以學習面對挫折與規則界線，長期可能更容易用情緒勒索達成目的。",
+    suggestion: "練習溫和而堅定地說「不」，允許孩子有情緒，但不因此改變決定。",
   },
   gentle: {
-    name: "正向／溫和育兒",
-    englishName: "Gentle / Positive",
-    coreBehavior: "強調共情與情緒接納，拒絕懲罰與權威壓制。",
-    benefits: "建立極佳的親密溝通與信任關係。",
-    risks: "界線拿捏不當易變成「放縱型」，父母易產生教養倦怠。",
-    suggestion: "溫和而堅定：「接納所有情緒，但規範不良行為」，明確守住原則。",
+    name: "正向溫和育兒",
+    englishName: "Gentle",
+    coreBehavior: "先同理孩子的情緒，再溫和而堅定地維持界線，引導孩子一起想辦法。",
+    benefits: "建立良好的親子信任與溝通，孩子情緒調節與問題解決能力較佳。",
+    risks: "需要花更多耐心與時間，情緒不穩定時容易變成放任。",
+    suggestion: "持續練習「先接住情緒、後談規則」的順序，必要時給自己緩衝時間再回應。",
   },
-  freeRange: {
-    name: "自由放養型",
-    englishName: "Free-Range",
-    coreBehavior: "信任孩子的能力，給予高度的自主權與探索空間。",
-    benefits: "培養極高的獨立性、自我效能與適應力。",
-    risks: "若環境評估不佳或安全感不足，可能演變成忽視。",
-    suggestion: "有界線的自由：先建立安全規範（如緊急聯絡機制），再逐步放大自主範圍。",
-  },
-  techParenting: {
-    name: "科技輔助育兒",
-    englishName: "Tech-Parenting",
-    coreBehavior: "運用數位工具（定位、螢幕時間管理）與社群分享。",
-    benefits: "提升安全管理效率，方便紀錄與交流。",
-    risks: "過度分享（Sharenting）侵犯隱私；過度追蹤引發信任危機。",
-    suggestion: "尊重隱私：分享前徵求孩子同意，科技工具作為保護輔助而非監控手段。",
-  },
-  intensive: {
-    name: "密集育兒",
-    englishName: "Intensive",
-    coreBehavior: "將育兒視為高度專業的投資，安排豐富的資源與課外活動。",
-    benefits: "認知發展與視野開闊，能力培養豐富。",
-    risks: "雙重壓力：孩子容易疲乏（Burnout），父母產生高度教養焦慮。",
-    suggestion: "留白與放空：避免行程過滿，每天保留自由遊戲（Unstructured Play）時間。",
+  uninvolved: {
+    name: "忽略型育兒",
+    englishName: "Uninvolved",
+    coreBehavior: "對孩子的狀況與情緒反應較少關注或回應，經常任由孩子自行處理。",
+    benefits: "孩子有較多自主空間，較少受到過度干涉。",
+    risks: "孩子容易感受到被忽視，缺乏安全感與情感連結，需要協助時得不到支持。",
+    suggestion: "從固定的「專屬陪伴時間」開始，練習主動關注孩子當下的狀態與需要。",
   },
 };
 
@@ -96,433 +96,289 @@ export interface QuizQuestion {
 export const QUESTIONS: QuizQuestion[] = [
   {
     id: "q1",
-    text: "孩子在公園玩溜滑梯，看起來快要跌倒了，你通常會？",
+    text: "【生活自理】4 歲的孩子早上堅持要自己穿鞋，但折騰了 10 分鐘還穿不好，出門快遲到了，開始發脾氣尖叫。",
     options: [
       {
         id: "q1-a",
-        text: "立刻衝過去扶住，接下來全程站在旁邊緊盯著他玩",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "買最容易穿的魔鬼氈鞋，事先把鞋子拉開擺好角度，甚至主動幫他套上一半，確保他完全不會遇到困難",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q1-b",
-        text: "玩之前先把遊樂設施四周檢查一遍，清掉可能絆倒他的石頭樹枝",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "不管他怎麼叫，直接抱起來強行幫他穿好，邊穿邊罵：「就跟你說你還不會，快點要遲到了！」",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q1-c",
-        text: "蹲下來抱抱他、同理他嚇了一跳的感覺，不責備也不處罰",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "算了吧，隨便他要穿哪一雙或乾脆穿拖鞋，只要他肯出門、不哭鬧就好",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q1-d",
-        text: "遠遠看著，讓他自己判斷風險、自己站起來",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "一直在旁邊指點：「左腳拉這裡！右腳踩下去！不對！」全程緊盯並頻繁插手微調",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q1-e",
-        text: "在手錶或 APP 上設定安全區域提醒，有狀況能立刻收到通知",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "蹲下來抱抱他：「你想自己穿，可是穿不好讓你很沮喪對不對？」平靜後說：「我們一起做，你把腳伸進去，我幫你拉後跟。」",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q1-f",
-        text: "順便觀察他的大肢體發展，回家後幫他安排合適的體能課補強",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "隨便他折騰，自己收拾自己的東西，完全不看他也不回應他的尖叫，任由他在門口哭",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q2",
-    text: "孩子寫功課卡關、寫不出來，你會？",
+    text: "【公共場所崩潰】在超市買東西時，2 歲半的孩子看到喜歡的玩具大哭大鬧、躺在地上甩頭，吵著一定要買。",
     options: [
       {
         id: "q2-a",
-        text: "直接坐到旁邊，一題一題帶著他寫完",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "蹲下來保持冷靜：「我知道你很想要這個玩具，買不到讓你很難過。」陪他哭完，堅定地說：「但我們今天只買菜，不買玩具。」",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q2-b",
-        text: "先幫他把不會的部分整理成簡單版本，讓他不會卡住",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "立刻拿出預先準備好的零食、平板轉移注意；還是崩潰就立刻抱著他離開現場，幫他掃除所有不適感",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q2-c",
-        text: "先接住他的挫折感，告訴他「卡住沒關係，我陪你」，再一起想辦法",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "為了撫平孩子的情緒並避免打擾別人，立刻把玩具買給他，安撫：「好啦好啦不哭了，買給你。」",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q2-d",
-        text: "讓他自己想辦法，卡住就先擱著，自己去查資料或問同學",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "覺得丟臉又憤怒，抓起孩子的手大罵：「你再哭試試看！現在立刻給我起來，以後再也不帶你出來了！」",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q2-e",
-        text: "打開學習 APP，讓他看線上教學影片或用家教平台自己找解法",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "一看有崩潰苗頭，立刻伸手拿過玩具幫他抱著、開包裝，邊走邊向店員討好，深怕他受一丁點委屈",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q2-f",
-        text: "幫他報名加強班或請家教，把這個科目的資源補齊",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "隨他躺在地上哭，自己繼續逛自己的，完全不理會也不陪伴，視若無睹地走開",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q3",
-    text: "幫孩子選課外活動或才藝班時，你的考量是？",
+    text: "【公園社交】3 歲的孩子在公園玩溜滑梯，另一個小朋友突然衝過來插隊，還把孩子推開。",
     options: [
       {
         id: "q3-a",
-        text: "選自己能全程陪同、隨時看得到他的班",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "怕孩子吃虧或難過，立刻拉走自己的孩子：「那我們去玩別的，這個不玩了。」主動幫他繞過這個衝突",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q3-b",
-        text: "先幫他排好一條「不會失敗」的路線，避開競爭激烈的班",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "走上前對插隊的孩子溫和堅定說：「要排隊喔！」再對自己的孩子說：「被推嚇到了嗎？下次可以大聲說『請排隊！』」",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q3-c",
-        text: "先問他喜不喜歡、感受如何，不喜歡就不勉強他繼續",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "對自己的孩子說：「你怎麼這麼軟弱？別人推你你不會推回去嗎？不准哭！」",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q3-d",
-        text: "讓他自己去試幾種，喜歡就留、不喜歡就換",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "在旁邊看著，覺得小孩子打打鬧鬧很正常，等他們自己解決，就算自己的孩子哭了也不打算干涉",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q3-e",
-        text: "上網爬文比較各家評價，用 APP 追蹤他的出席和進度",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "密集盤旋在孩子旁邊，一看到有人靠近就立刻伸手隔開，隨時指揮：「站這邊！握緊！小心別人推你！」",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q3-f",
-        text: "幫他排滿音樂、運動、語言等多元活動，盡量拓展他的能力版圖",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "坐在遠處滑手機，連孩子被推倒了都完全沒注意到",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q4",
-    text: "孩子在學校跟同學吵架了，你會？",
+    text: "【飲食常規】5 歲的孩子吃飯極度挑食，只吃白飯和炸雞，看到蔬菜就推開碗喊：「這個好臭我不要吃！」",
     options: [
       {
         id: "q4-a",
-        text: "馬上聯絡老師，把整件事問清楚、盯到解決為止",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "帶去檢查微量元素、買昂貴兒童維他命，把餐點全部打成汁、調整成免嚼食版本，確保他不會碰到不喜歡的口感",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q4-b",
-        text: "私下先跟老師打聲招呼，以後盡量把他們分開，避免再發生",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "威脅孩子：「今天不把蔬菜吃完，不准離開餐桌！也不准看卡通或吃點心！」",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q4-c",
-        text: "先聽他說感受、同理他的情緒，不急著評斷對錯",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "溫和說明：「身體需要蔬菜才會變強壯喔。」允許他先嘗試一口，若堅持不吃就平靜收走餐盤，中間不提供額外零食",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q4-d",
-        text: "讓他自己想辦法和同學和好，除非真的太嚴重才出手",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "算了吧，孩子肯吃飯就好，不想每餐都像打仗，直接順從他，只準備他愛吃的食物",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q4-e",
-        text: "到班級群組或聯絡簿 APP 上跟老師確認事發經過",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "每頓飯都把蔬菜切得極碎藏進飯裡，邊餵邊哄、追著他餵完，隨時監視他吞了幾口",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q4-f",
-        text: "藉機幫他報名人際溝通或情緒管理課程，加強這方面的能力",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "隨便他吃不吃，餐桌上放著食物，愛吃什麼吃什麼，不吃拉倒，也不關心他的營養狀況",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q5",
-    text: "孩子想自己嘗試有點危險的事，例如用剪刀、切水果、爬高一點的地方，你會？",
+    text: "【安全與探索】4 歲的孩子在遊樂場想要挑戰一個比較高、有難度的爬網。",
     options: [
       {
         id: "q5-a",
-        text: "不太放心讓他做，都是我來做比較快也比較安全",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "在適當距離防護，鼓勵他：「你想試試看對不對？踩穩這個繩子，手握緊這裡。」讓他在安全範圍內自己試探",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q5-b",
-        text: "先把環境整理到「就算失敗也不會受傷」再讓他試",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "覺得太危險了，直接拒絕：「這個太高了，你還太小，我們去玩旁邊安全的搖搖馬。」主動幫他排除風險",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q5-c",
-        text: "先同理他想嘗試的心情，溫和但堅定地說明可以做和不能做的部分",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "緊緊跟在旁邊，手全程扶著他的腰，不斷喊：「小心！右腳踏哪裡！手握這裡！不要動我來教你！」",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q5-d",
-        text: "提醒基本安全原則後，就讓他自己動手、自己承擔後果",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "命令他：「要爬可以，但你必須完全聽我的指令！我說左腳踏哪裡就踏哪裡，不准亂踩，不然立刻下來！」",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q5-e",
-        text: "用手機錄下來方便事後複習，同時在旁邊用 APP 計時觀察",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "隨便他，他想爬就去爬，他哭喊求救時才過去看一眼",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q5-f",
-        text: "順勢幫他報名相關的專業課程，讓他有系統地學習這項技能",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "自己坐在旁邊處理自己的事，根本沒發現孩子已經爬到了高處",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q6",
-    text: "孩子考試成績不理想，你的反應是？",
+    text: "【玩具分享與衝突】兩個學齡前孩子在客廳搶同一台玩具小汽車，開始拉扯並尖叫。",
     options: [
       {
         id: "q6-a",
-        text: "開始緊盯他每天的讀書進度，確保下次不會再考差",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "主動衝過去幫他們分配時間（「哥哥玩 3 分鐘，弟弟玩 3 分鐘」），甚至立刻買一台一模一樣的，讓他們完全不用搶",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q6-b",
-        text: "去跟老師談，看能不能調整考試方式或給他多一點準備時間",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "一把搶過玩具：「吵什麼吵！兩個都不要玩了！」直接沒收放高處，並處罰兩人",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q6-c",
-        text: "先同理他的失落，告訴他「分數不代表你不夠好」，再一起看怎麼調整",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "蹲下描述狀況：「你們都好想玩這台車對不對？」引導：「但車子只有一台，你們覺得可以怎麼辦？」陪他們試著輪流或一起玩",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q6-d",
-        text: "讓他自己決定要不要調整讀書方法，不太干涉",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "怕小的那方受委屈，立刻強迫大的那方：「你是哥哥/姊姊，本來就要讓弟弟/妹妹！快點給他！」",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q6-e",
-        text: "用學習追蹤 APP 分析他哪個章節錯最多，抓出弱點",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "密集介入監視，幫他們安排拿玩具的角度、設定計時器，全程站在中間擔任絕對的協調官",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q6-f",
-        text: "幫他加開一對一家教或補習，把成績盡快補上來",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "在另一個房間做自己的事，聽見吵鬧聲也完全不予理會，讓他們自己哭喊",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q7",
-    text: "孩子想穿自己選的、跟你想法不太搭的衣服出門，你會？",
+    text: "【挫折與失敗】3 歲半的孩子積木蓋到一半倒塌了，他挫折地大哭，把積木摔得到處都是。",
     options: [
       {
         id: "q7-a",
-        text: "還是幫他換成我覺得比較合適、比較保險的",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "主動幫他把倒塌的積木撿起來，並幫他蓋好最難、最容易倒的底座，把會導致失敗的難題全部清空",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q7-b",
-        text: "前一晚先幫他把「不出錯」的衣服準備好，減少他亂選的機會",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "接納情緒：「積木倒了你覺得很氣對不對？」平靜後說：「倒掉很正常，是不是底座沒放平？要不要再試一次？」",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q7-c",
-        text: "稱讚他有自己的想法，順著他的選擇，不強迫改變",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "嚴厲斥責：「亂摔東西像什麼樣子！再摔以後通通不准玩！給我去牆角站著！」",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q7-d",
-        text: "讓他自己決定，出去被說了也是他自己的經驗",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "抱著他安慰：「好了好了不哭，積木壞壞！我們不玩這個了，帶你去吃冰淇淋。」",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q7-e",
-        text: "拍照傳到家庭群組問問其他家人的意見再決定",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "立刻坐下來「指導」他：「就跟你說過要這樣放！來，聽我的命令，拿這塊放到這裡，不准亂放！」",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q7-f",
-        text: "藉機帶他認識基本穿搭原則，順便安排相關的美感課程",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "瞥一眼說：「倒了就倒了，哭什麼哭。」然後繼續做自己的事，任由孩子發脾氣",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q8",
-    text: "規劃孩子未來的升學或志願方向時，你會？",
+    text: "【睡眠常規】5 歲的孩子到了睡覺時間，依然興奮地在床上跳來跳去，拒絕躺下睡覺。",
     options: [
       {
         id: "q8-a",
-        text: "幫他把每一步都規劃好，時時確認他有沒有照著走",
-        weights: [
-          { style: "helicopter", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "幫他準備全套助眠設備（白噪音、香氛、重力毯），一直躺在旁邊幫他按摩、講故事，順著他的所有小要求，只求他能睡著",
+        weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q8-b",
-        text: "提前打點好資源和人脈，讓他一路走得比較順",
-        weights: [
-          { style: "lawnmower", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "板起臉孔大聲喝斥：「立刻給我躺好！眼睛閉起來！再動一下今晚試試看！」",
+        weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q8-c",
-        text: "常常和他聊天、了解他真正喜歡什麼，尊重他的感受來調整方向",
-        weights: [
-          { style: "gentle", weight: 2 },
-          { style: "freeRange", weight: 1 },
-        ],
+        text: "溫和堅定地關燈，抱他回床上：「現在是睡覺時間，身體需要休息了。你可以抱著小熊靜靜躺著，或聽我講最後一個故事。」",
+        weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q8-d",
-        text: "讓他自己摸索興趣，我頂多在他問的時候給建議",
-        weights: [
-          { style: "freeRange", weight: 2 },
-          { style: "gentle", weight: 1 },
-        ],
+        text: "隨便他，他想玩到幾點就幾點，等他自己累倒在沙發上再抱他去床上",
+        weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q8-e",
-        text: "用性向測驗 APP 和線上資源幫他分析適合的方向",
-        weights: [
-          { style: "techParenting", weight: 2 },
-          { style: "helicopter", weight: 1 },
-        ],
+        text: "前一小時就開始密集監控睡前流程，嚴格按幾點幾分執行刷牙、穿睡衣、躺平，一有偏差就立刻介入修正",
+        weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q8-f",
-        text: "及早安排各種營隊、競賽、實習機會，幫他把履歷做得漂亮",
-        weights: [
-          { style: "intensive", weight: 2 },
-          { style: "lawnmower", weight: 1 },
-        ],
+        text: "自己在客廳看電視滑手機，不管孩子在房間裡做什麼，到了深夜發現孩子還沒睡也無所謂",
+        weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },

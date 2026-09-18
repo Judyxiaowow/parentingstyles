@@ -11,11 +11,19 @@ import {
 
 type Step = "intro" | "quiz" | "email" | "loading" | "result" | "error";
 
+interface AnalysisSections {
+  analysis: string;
+  evaluation: string;
+  suggestions: string;
+  activity: string;
+}
+
 interface AnalyzeResultData {
   resultType: ParentingStyleCode;
   styleName: string;
   scores: Record<ParentingStyleCode, number>;
   result: string;
+  sections: AnalysisSections;
 }
 
 interface ApiSuccessBody<T> {
@@ -29,50 +37,6 @@ interface ApiErrorBody {
 }
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// 每個風格對應的表情符號跟配色，純粹是畫面裝飾用，不影響任何計分或
-// API 邏輯——resultType 本身仍然是唯一的資料來源。
-const STYLE_THEME: Record<
-  ParentingStyleCode,
-  { emoji: string; badge: string; bar: string; glow: string }
-> = {
-  helicopter: {
-    emoji: "🚁",
-    badge: "bg-sky-100 text-sky-700 ring-sky-300",
-    bar: "bg-sky-400",
-    glow: "from-sky-200",
-  },
-  lawnmower: {
-    emoji: "🌾",
-    badge: "bg-amber-100 text-amber-700 ring-amber-300",
-    bar: "bg-amber-400",
-    glow: "from-amber-200",
-  },
-  gentle: {
-    emoji: "🤗",
-    badge: "bg-rose-100 text-rose-700 ring-rose-300",
-    bar: "bg-rose-400",
-    glow: "from-rose-200",
-  },
-  freeRange: {
-    emoji: "🦋",
-    badge: "bg-emerald-100 text-emerald-700 ring-emerald-300",
-    bar: "bg-emerald-400",
-    glow: "from-emerald-200",
-  },
-  techParenting: {
-    emoji: "📱",
-    badge: "bg-violet-100 text-violet-700 ring-violet-300",
-    bar: "bg-violet-400",
-    glow: "from-violet-200",
-  },
-  intensive: {
-    emoji: "🎯",
-    badge: "bg-indigo-100 text-indigo-700 ring-indigo-300",
-    bar: "bg-indigo-400",
-    glow: "from-indigo-200",
-  },
-};
 
 export default function Home() {
   const [step, setStep] = useState<Step>("intro");
@@ -178,10 +142,8 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-dvh overflow-hidden">
-      <BackgroundDecoration />
-
-      <main className="relative mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center px-4 py-10 sm:px-6 sm:py-16">
+    <div className="min-h-dvh bg-(--background)">
+      <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center px-4 py-10 sm:px-6 sm:py-16">
         <div key={step} className="animate-fade-in-up">
           {step === "intro" && <IntroScreen onStart={handleStart} />}
 
@@ -220,67 +182,168 @@ export default function Home() {
   );
 }
 
-function BackgroundDecoration() {
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-      <div className="absolute -top-24 -left-20 h-72 w-72 rounded-full bg-gradient-to-br from-orange-200 to-transparent opacity-50 blur-3xl" />
-      <div className="absolute top-1/3 -right-24 h-80 w-80 rounded-full bg-gradient-to-bl from-rose-200 to-transparent opacity-50 blur-3xl" />
-      <div className="absolute bottom-0 left-1/4 h-64 w-64 rounded-full bg-gradient-to-tr from-amber-200 to-transparent opacity-40 blur-3xl" />
-    </div>
-  );
-}
+// ---------- 共用元件 ----------
 
 function Card({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-3xl border border-orange-100 bg-white/90 p-6 shadow-xl shadow-orange-100/50 backdrop-blur-sm sm:p-8">
+    <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
       {children}
     </div>
   );
 }
 
-function PrimaryButton({
+function IconBadge({
   children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  tone = "accent",
+}: {
+  children: React.ReactNode;
+  tone?: "accent" | "danger";
+}) {
+  const toneClasses =
+    tone === "danger" ? "bg-red-50 text-red-600" : "bg-amber-50 text-amber-700";
+  return (
+    <div className={`mx-auto flex h-12 w-12 items-center justify-center rounded-full ${toneClasses}`}>
+      {children}
+    </div>
+  );
+}
+
+function PrimaryButton({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className="w-full rounded-full bg-orange-400 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-200 transition-all duration-150 hover:bg-orange-500 hover:shadow-orange-300 active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none"
+      className="w-full rounded-lg bg-stone-900 px-6 py-3.5 text-base font-medium text-white shadow-sm transition-colors duration-150 hover:bg-stone-800 active:bg-stone-950 disabled:cursor-not-allowed disabled:bg-stone-200 disabled:text-stone-400"
     >
       {children}
     </button>
   );
 }
 
-function SecondaryButton({
-  children,
-  ...props
-}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+function SecondaryButton({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       {...props}
-      className="w-full rounded-full border-2 border-stone-200 bg-white px-6 py-3 text-base font-medium text-stone-600 transition-all duration-150 hover:border-orange-200 hover:text-orange-600 active:scale-[0.98]"
+      className="w-full rounded-lg border border-stone-300 bg-white px-6 py-3 text-base font-medium text-stone-700 transition-colors duration-150 hover:border-stone-400 hover:bg-stone-50"
     >
       {children}
     </button>
   );
 }
+
+// ---------- 圖示（純線條 SVG，取代表情符號，維持專業質感） ----------
+
+function IconClipboard() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-6 w-6">
+      <rect x="6" y="4" width="12" height="17" rx="2" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M9 11h6M9 15h6" />
+    </svg>
+  );
+}
+
+function IconMail() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-6 w-6">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.5 6.5 12 13l8.5-6.5" />
+    </svg>
+  );
+}
+
+function IconAlert() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-6 w-6">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 9v4m0 4h.01M10.3 3.9 2.5 17a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"
+      />
+    </svg>
+  );
+}
+
+function IconChartBar() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 3v18h18M8 17v-6M13 17V7M18 17v-4" />
+    </svg>
+  );
+}
+
+function IconCheckCircle() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
+      <circle cx="12" cy="12" r="9" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M8.5 12.5 11 15l4.5-5" />
+    </svg>
+  );
+}
+
+function IconLightbulb() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.4.3.6.8.6 1.3V16h5.8v-.8c0-.5.2-1 .6-1.3A6 6 0 0 0 12 3Z"
+      />
+    </svg>
+  );
+}
+
+function IconHeart() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 20s-7-4.5-9.5-9A5 5 0 0 1 12 5a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"
+      />
+    </svg>
+  );
+}
+
+// ---------- 畫面 ----------
 
 function IntroScreen({ onStart }: { onStart: () => void }) {
+  const styleNames = (Object.keys(PARENTING_STYLES) as ParentingStyleCode[]).map(
+    (code) => PARENTING_STYLES[code].name
+  );
+
   return (
     <Card>
       <div className="text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100 text-3xl">
-          🧸
-        </div>
-        <h1 className="text-2xl font-bold text-stone-800 sm:text-3xl">{QUIZ_TITLE}</h1>
+        <IconBadge>
+          <IconClipboard />
+        </IconBadge>
+        <p className="mt-4 text-xs font-medium tracking-wide text-amber-700">
+          3 分鐘 · {QUESTIONS.length} 題情境測驗
+        </p>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+          {QUIZ_TITLE}
+        </h1>
         <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-stone-500 sm:text-base">
-          回答 {QUESTIONS.length} 題日常育兒情境題，了解你的育兒風格傾向，測驗結束後留下 email
-          即可取得 AI 為你生成的個人化分析與客觀建議。
+          從 {QUESTIONS.length} 個真實的育兒情境，看穿你不自覺的教養慣性——
+          AI 會為你生成專屬的個人化分析與客觀建議。
         </p>
       </div>
+
+      <div className="mt-6 flex flex-wrap justify-center gap-2">
+        {styleNames.map((name) => (
+          <span
+            key={name}
+            className="rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs text-stone-500"
+          >
+            {name}
+          </span>
+        ))}
+      </div>
+
       <div className="mt-8">
-        <PrimaryButton onClick={onStart}>開始測驗 →</PrimaryButton>
+        <PrimaryButton onClick={onStart}>開始測驗，找出我的育兒風格</PrimaryButton>
+        <p className="mt-3 text-center text-xs text-stone-400">
+          完全匿名作答，僅需 email 即可領取完整分析報告
+        </p>
       </div>
     </Card>
   );
@@ -312,33 +375,33 @@ function QuizScreen({
           aria-valuenow={progress}
           aria-valuemin={0}
           aria-valuemax={100}
-          className="h-2.5 w-full overflow-hidden rounded-full bg-orange-100"
+          className="h-1.5 w-full overflow-hidden rounded-full bg-stone-200"
         >
           <div
-            className="h-full rounded-full bg-gradient-to-r from-orange-300 to-rose-300 transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-amber-600 transition-all duration-500 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <p className="mt-2 text-center text-xs font-medium tracking-wide text-orange-500">
+        <p className="mt-2 text-center text-xs font-medium tracking-wide text-stone-400">
           第 {questionIndex + 1} 題／共 {totalQuestions} 題
         </p>
       </div>
 
       <div key={question.id} className="animate-fade-in-up">
         <Card>
-          <h2 className="text-lg font-bold text-stone-800 sm:text-xl">{question.text}</h2>
+          <h2 className="text-lg font-semibold text-stone-900 sm:text-xl">{question.text}</h2>
 
-          <fieldset className="mt-5 space-y-3 border-none p-0">
+          <fieldset className="mt-5 space-y-2.5 border-none p-0">
             <legend className="sr-only">{question.text}</legend>
             {question.options.map((option) => {
               const isSelected = selectedOptionId === option.id;
               return (
                 <label
                   key={option.id}
-                  className={`flex cursor-pointer items-start gap-3 rounded-2xl border-2 p-4 text-sm transition-all duration-150 sm:text-base ${
+                  className={`flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm transition-colors duration-150 sm:text-base ${
                     isSelected
-                      ? "border-orange-400 bg-orange-50 shadow-md shadow-orange-100"
-                      : "border-stone-200 bg-white hover:border-orange-200 hover:bg-orange-50/40"
+                      ? "border-amber-500 bg-amber-50/60"
+                      : "border-stone-200 bg-white hover:border-stone-300 hover:bg-stone-50"
                   }`}
                 >
                   <input
@@ -351,8 +414,8 @@ function QuizScreen({
                   />
                   <span
                     aria-hidden="true"
-                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-                      isSelected ? "border-orange-500 bg-orange-500" : "border-stone-300 bg-white"
+                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${
+                      isSelected ? "border-amber-600 bg-amber-600" : "border-stone-300 bg-white"
                     }`}
                   >
                     {isSelected && (
@@ -367,7 +430,7 @@ function QuizScreen({
                       </svg>
                     )}
                   </span>
-                  <span className={isSelected ? "font-medium text-stone-800" : "text-stone-600"}>
+                  <span className={isSelected ? "font-medium text-stone-900" : "text-stone-600"}>
                     {option.text}
                   </span>
                 </label>
@@ -408,10 +471,10 @@ function EmailScreen({
   return (
     <Card>
       <div className="text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-orange-100 text-2xl">
-          💌
-        </div>
-        <h2 className="text-xl font-bold text-stone-800 sm:text-2xl">
+        <IconBadge>
+          <IconMail />
+        </IconBadge>
+        <h2 className="mt-4 text-xl font-semibold tracking-tight text-stone-900 sm:text-2xl">
           最後一步：留下 email
         </h2>
         <p className="mt-2 text-sm text-stone-500">沒有填寫 email 無法看到測驗結果。</p>
@@ -424,13 +487,13 @@ function EmailScreen({
           onChange={(event) => onEmailChange(event.target.value)}
           placeholder="you@example.com"
           required
-          className="w-full rounded-2xl border-2 border-stone-200 bg-white px-4 py-3 text-center text-base text-stone-800 outline-none transition-colors placeholder:text-stone-300 focus:border-orange-400"
+          className="w-full rounded-lg border border-stone-300 bg-white px-4 py-3 text-center text-base text-stone-900 outline-none transition-colors placeholder:text-stone-400 focus:border-amber-500 focus:ring-2 focus:ring-amber-100"
         />
         <PrimaryButton type="submit" disabled={!isValid}>
           送出並查看結果
         </PrimaryButton>
         {errorMessage && (
-          <p className="rounded-xl bg-rose-50 px-4 py-2 text-center text-sm text-rose-600">
+          <p className="rounded-lg bg-red-50 px-4 py-2 text-center text-sm text-red-600">
             {errorMessage}
           </p>
         )}
@@ -443,11 +506,7 @@ function LoadingScreen() {
   return (
     <Card>
       <div role="status" className="flex flex-col items-center justify-center py-8 text-center">
-        <div className="flex gap-2">
-          <span className="h-3 w-3 animate-bounce rounded-full bg-orange-300 [animation-delay:-0.3s]" />
-          <span className="h-3 w-3 animate-bounce rounded-full bg-rose-300 [animation-delay:-0.15s]" />
-          <span className="h-3 w-3 animate-bounce rounded-full bg-amber-300" />
-        </div>
+        <div className="h-10 w-10 animate-spin rounded-full border-[3px] border-stone-200 border-t-amber-600" />
         <p className="mt-5 text-sm font-medium text-stone-500 sm:text-base">
           AI 正在為你生成分析，請稍候…
         </p>
@@ -456,70 +515,87 @@ function LoadingScreen() {
   );
 }
 
-function ResultScreen({
-  data,
-  onRestart,
-}: {
-  data: AnalyzeResultData;
-  onRestart: () => void;
-}) {
+function ResultScreen({ data, onRestart }: { data: AnalyzeResultData; onRestart: () => void }) {
   const sortedScores = (Object.entries(data.scores) as [ParentingStyleCode, number][]).sort(
     (a, b) => b[1] - a[1]
   );
   const maxScore = Math.max(1, ...sortedScores.map(([, score]) => score));
-  const theme = STYLE_THEME[data.resultType];
+
+  const sectionList: { key: keyof AnalysisSections; label: string; icon: React.ReactNode }[] = [
+    { key: "analysis", label: "分析", icon: <IconChartBar /> },
+    { key: "evaluation", label: "綜合評價", icon: <IconCheckCircle /> },
+    { key: "suggestions", label: "建議", icon: <IconLightbulb /> },
+    { key: "activity", label: "親子小活動", icon: <IconHeart /> },
+  ];
 
   return (
     <div>
-      {/* 這張卡片本身就是設計成拿去截圖分享的樣子，資訊都收在這個容器裡。 */}
-      <div
-        className={`overflow-hidden rounded-3xl border border-orange-100 bg-gradient-to-b ${theme.glow} to-white shadow-xl shadow-orange-100/50`}
-      >
-        <div className="px-6 pt-8 pb-6 text-center sm:px-10">
-          <div
-            className={`mx-auto mb-3 flex h-20 w-20 items-center justify-center rounded-full text-4xl ring-4 ${theme.badge}`}
-          >
-            {theme.emoji}
-          </div>
-          <p className="text-sm font-medium text-stone-500">{QUIZ_TITLE}</p>
-          <h2 className="mt-1 text-2xl font-bold text-stone-800 sm:text-3xl">
-            你是「{data.styleName}」型
+      <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+        {/* 標頭：風格結果摘要 */}
+        <div className="border-b border-stone-100 px-6 py-7 text-center sm:px-10">
+          <p className="text-xs font-medium tracking-wide text-stone-400">{QUIZ_TITLE}</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+            {data.styleName}
           </h2>
-          <span
-            className={`mt-3 inline-block rounded-full px-3 py-1 text-xs font-semibold ring-1 ${theme.badge}`}
-          >
+          <span className="mt-3 inline-block rounded-full bg-amber-50 px-3 py-1 text-xs font-medium tracking-wide text-amber-700">
             {data.resultType}
           </span>
         </div>
 
-        <div className="bg-white/80 px-6 pb-8 sm:px-10">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-stone-600 sm:text-base">
-            {data.result}
-          </p>
-
-          <div className="mt-6">
-            <h3 className="mb-3 text-xs font-semibold tracking-wide text-stone-400 uppercase">
-              各風格得分
-            </h3>
-            <div className="space-y-2">
-              {sortedScores.map(([code, score]) => (
+        {/* 各風格得分：只強調主要風格，其餘保持中性色 */}
+        <div className="border-b border-stone-100 px-6 py-6 sm:px-10">
+          <h3 className="mb-3 text-xs font-semibold tracking-wide text-stone-400 uppercase">
+            各風格得分
+          </h3>
+          <div className="space-y-2">
+            {sortedScores.map(([code, score]) => {
+              const isTop = code === data.resultType;
+              return (
                 <div key={code} className="flex items-center gap-3 text-sm">
-                  <span className="w-28 shrink-0 truncate text-xs text-stone-500 sm:w-32 sm:text-sm">
+                  <span
+                    className={`w-28 shrink-0 truncate sm:w-32 ${
+                      isTop ? "font-medium text-stone-900" : "text-stone-500"
+                    }`}
+                  >
                     {PARENTING_STYLES[code].name}
                   </span>
-                  <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-stone-100">
+                  <span className="h-2 flex-1 overflow-hidden rounded-full bg-stone-100">
                     <span
-                      className={`block h-full rounded-full ${STYLE_THEME[code].bar} transition-all duration-500`}
+                      className={`block h-full rounded-full transition-all duration-500 ${
+                        isTop ? "bg-amber-600" : "bg-stone-300"
+                      }`}
                       style={{ width: `${(score / maxScore) * 100}%` }}
                     />
                   </span>
-                  <span className="w-6 shrink-0 text-right font-medium text-stone-600">
+                  <span
+                    className={`w-6 shrink-0 text-right ${
+                      isTop ? "font-medium text-stone-900" : "text-stone-500"
+                    }`}
+                  >
                     {score}
                   </span>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
+        </div>
+
+        {/* 分析內容：拆成四個獨立段落，各自有標題跟圖示，方便閱讀較長的內容 */}
+        <div className="divide-y divide-stone-100">
+          {sectionList.map(
+            ({ key, label, icon }) =>
+              data.sections[key] && (
+                <div key={key} className="px-6 py-6 sm:px-10">
+                  <div className="flex items-center gap-2 text-stone-500">
+                    {icon}
+                    <h3 className="text-sm font-semibold tracking-wide">{label}</h3>
+                  </div>
+                  <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-stone-700 sm:text-base">
+                    {data.sections[key]}
+                  </p>
+                </div>
+              )
+          )}
         </div>
       </div>
 
@@ -542,11 +618,11 @@ function ErrorScreen({
   return (
     <Card>
       <div role="alert" className="text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-rose-100 text-2xl">
-          😥
-        </div>
-        <h2 className="text-xl font-bold text-stone-800">發生錯誤了</h2>
-        <p className="mt-2 rounded-xl bg-rose-50 px-4 py-3 text-sm text-rose-600">
+        <IconBadge tone="danger">
+          <IconAlert />
+        </IconBadge>
+        <h2 className="mt-4 text-xl font-semibold tracking-tight text-stone-900">發生錯誤了</h2>
+        <p className="mt-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
           {message || "發生未知錯誤，請稍後再試。"}
         </p>
       </div>
