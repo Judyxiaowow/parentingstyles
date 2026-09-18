@@ -14,7 +14,8 @@ type Step = "intro" | "quiz" | "email" | "loading" | "result" | "error";
 interface AnalysisSections {
   analysis: string;
   evaluation: string;
-  suggestions: string;
+  // 建議是卡片式排版，所以是多條短項目的陣列，不是一整段長文字。
+  suggestions: string[];
   activity: string;
 }
 
@@ -141,11 +142,22 @@ export default function Home() {
     setStep("intro");
   }
 
+  // 首頁（intro）是行銷向的 landing page，結果頁是雙欄 dashboard，
+  // 兩者內容都比較多、需要從上往下捲動閱讀，所以用比較寬的版面、
+  // 也不做垂直置中；其餘步驟維持原本窄版、置中的「app」版面。
+  const isWide = step === "intro" || step === "result";
+
   return (
     <div className="min-h-dvh bg-(--background)">
-      <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center px-4 py-10 sm:px-6 sm:py-16">
+      <main
+        className={
+          isWide
+            ? "mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 sm:py-16"
+            : "mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center px-4 py-10 sm:px-6 sm:py-16"
+        }
+      >
         <div key={step} className="animate-fade-in-up">
-          {step === "intro" && <IntroScreen onStart={handleStart} />}
+          {step === "intro" && <LandingScreen onStart={handleStart} />}
 
           {step === "quiz" && (
             <QuizScreen
@@ -187,6 +199,26 @@ export default function Home() {
 function Card({ children }: { children: React.ReactNode }) {
   return (
     <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
+      {children}
+    </div>
+  );
+}
+
+function SectionBlock({
+  label,
+  icon,
+  children,
+}: {
+  label: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 text-stone-500">
+        {icon}
+        <h3 className="text-sm font-semibold tracking-wide">{label}</h3>
+      </div>
       {children}
     </div>
   );
@@ -291,6 +323,27 @@ function IconLightbulb() {
   );
 }
 
+function IconSparkles() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-6 w-6">
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 3v4M12 17v4M3 12h4M17 12h4M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2"
+      />
+    </svg>
+  );
+}
+
+function IconFileText() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-6 w-6">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M14 3v5h5M9 13h6M9 17h6" />
+    </svg>
+  );
+}
+
 function IconHeart() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="h-5 w-5">
@@ -305,47 +358,82 @@ function IconHeart() {
 
 // ---------- 畫面 ----------
 
-function IntroScreen({ onStart }: { onStart: () => void }) {
-  const styleNames = (Object.keys(PARENTING_STYLES) as ParentingStyleCode[]).map(
-    (code) => PARENTING_STYLES[code].name
-  );
+// 每個動物型一句話預告，只透露個性、不透露「哪個比較好」，
+// 保留測驗選項本身的懸念（跟 data/questions.ts 的設計目的一致）。
+const STYLE_TEASERS: Record<ParentingStyleCode, string> = {
+  helicopter: "時刻警覺，寸步不離",
+  lawnmower: "未雨綢繆，先把路鋪好",
+  tiger: "雷厲風行，說一不二",
+  permissive: "心太軟，一哭就投降",
+  gentle: "溫暖擁抱，也劃好界線",
+  uninvolved: "隨緣放養，海闊天空",
+};
+
+const HOW_IT_WORKS: { icon: React.ReactNode; title: string; desc: string }[] = [
+  { icon: <IconClipboard />, title: "走進森林故事", desc: `回答 ${QUESTIONS.length} 題情境題，憑直覺選擇` },
+  { icon: <IconSparkles />, title: "AI 生成分析", desc: "根據你的作答傾向生成專屬解讀" },
+  { icon: <IconFileText />, title: "領取專屬報告", desc: "留下 email，收到完整分析與建議" },
+];
+
+function LandingScreen({ onStart }: { onStart: () => void }) {
+  const styleCodes = Object.keys(PARENTING_STYLES) as ParentingStyleCode[];
 
   return (
-    <Card>
-      <div className="text-center">
+    <div className="space-y-10 sm:space-y-14">
+      {/* Hero */}
+      <section className="text-center">
         <IconBadge>
           <IconClipboard />
         </IconBadge>
         <p className="mt-4 text-xs font-medium tracking-wide text-amber-700">
           3 分鐘 · {QUESTIONS.length} 題情境測驗
         </p>
-        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl">
           {QUIZ_TITLE}
         </h1>
-        <p className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-stone-500 sm:text-base">
-          從 {QUESTIONS.length} 個真實的育兒情境，看穿你不自覺的教養慣性——
+        <p className="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-stone-500 sm:text-base">
+          你是森林裡的一位動物家長，正陪著一隻幼獸長大。接下來會遇到
+          {QUESTIONS.length} 個森林挑戰——你的直覺反應，會透露你藏在心底的教養慣性，
           AI 會為你生成專屬的個人化分析與客觀建議。
         </p>
-      </div>
+        <div className="mx-auto mt-8 max-w-xs">
+          <PrimaryButton onClick={onStart}>開始測驗，找出我的動物型</PrimaryButton>
+          <p className="mt-3 text-center text-xs text-stone-400">
+            完全匿名作答，僅需 email 即可領取完整分析報告
+          </p>
+        </div>
+      </section>
 
-      <div className="mt-6 flex flex-wrap justify-center gap-2">
-        {styleNames.map((name) => (
-          <span
-            key={name}
-            className="rounded-full border border-stone-200 bg-stone-50 px-3 py-1 text-xs text-stone-500"
-          >
-            {name}
-          </span>
+      {/* 使用流程 */}
+      <section className="grid gap-4 sm:grid-cols-3">
+        {HOW_IT_WORKS.map((step, index) => (
+          <div key={step.title} className="rounded-2xl border border-stone-200 bg-white p-5 text-center">
+            <IconBadge>{step.icon}</IconBadge>
+            <p className="mt-3 text-xs font-medium tracking-wide text-stone-400">
+              STEP {index + 1}
+            </p>
+            <h3 className="mt-1 text-sm font-semibold text-stone-900">{step.title}</h3>
+            <p className="mt-1 text-xs text-stone-500">{step.desc}</p>
+          </div>
         ))}
-      </div>
+      </section>
 
-      <div className="mt-8">
-        <PrimaryButton onClick={onStart}>開始測驗，找出我的育兒風格</PrimaryButton>
-        <p className="mt-3 text-center text-xs text-stone-400">
-          完全匿名作答，僅需 email 即可領取完整分析報告
-        </p>
-      </div>
-    </Card>
+      {/* 動物型預告 */}
+      <section>
+        <h2 className="text-center text-xs font-semibold tracking-wide text-stone-400 uppercase">
+          森林裡的 6 種動物爸媽
+        </h2>
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {styleCodes.map((code) => (
+            <div key={code} className="rounded-xl border border-stone-200 bg-white p-4 text-center">
+              <p className="text-sm font-semibold text-stone-900">{PARENTING_STYLES[code].name}</p>
+              <p className="mt-1 text-xs text-stone-400">{STYLE_TEASERS[code]}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+    </div>
   );
 }
 
@@ -521,85 +609,118 @@ function ResultScreen({ data, onRestart }: { data: AnalyzeResultData; onRestart:
   );
   const maxScore = Math.max(1, ...sortedScores.map(([, score]) => score));
 
-  const sectionList: { key: keyof AnalysisSections; label: string; icon: React.ReactNode }[] = [
-    { key: "analysis", label: "分析", icon: <IconChartBar /> },
-    { key: "evaluation", label: "綜合評價", icon: <IconCheckCircle /> },
-    { key: "suggestions", label: "建議", icon: <IconLightbulb /> },
-    { key: "activity", label: "親子小活動", icon: <IconHeart /> },
-  ];
-
+  // Dashboard 版面：左欄放「身分＋得分」這種一眼看懂的摘要資訊，
+  // 右欄放要細讀的分析內容，兩欄各自獨立卡片。窄螢幕（lg 以下）
+  // 直接照 DOM 順序疊成單欄，避免手機/平板跑版。
   return (
     <div>
-      <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
-        {/* 標頭：風格結果摘要 */}
-        <div className="border-b border-stone-100 px-6 py-7 text-center sm:px-10">
-          <p className="text-xs font-medium tracking-wide text-stone-400">{QUIZ_TITLE}</p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
-            {data.styleName}
-          </h2>
-          <span className="mt-3 inline-block rounded-full bg-amber-50 px-3 py-1 text-xs font-medium tracking-wide text-amber-700">
-            {data.resultType}
-          </span>
-        </div>
+      <div className="grid gap-4 lg:grid-cols-3 lg:items-start lg:gap-6">
+        <div className="space-y-4 lg:sticky lg:top-8 lg:col-span-1">
+          <Card>
+            <div className="text-center">
+              <p className="text-xs font-medium tracking-wide text-stone-400">{QUIZ_TITLE}</p>
+              <h2 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900">
+                {data.styleName}
+              </h2>
+              <span className="mt-3 inline-block rounded-full bg-amber-50 px-3 py-1 text-xs font-medium tracking-wide text-amber-700">
+                {data.resultType}
+              </span>
+            </div>
+          </Card>
 
-        {/* 各風格得分：只強調主要風格，其餘保持中性色 */}
-        <div className="border-b border-stone-100 px-6 py-6 sm:px-10">
-          <h3 className="mb-3 text-xs font-semibold tracking-wide text-stone-400 uppercase">
-            各風格得分
-          </h3>
-          <div className="space-y-2">
-            {sortedScores.map(([code, score]) => {
-              const isTop = code === data.resultType;
-              return (
-                <div key={code} className="flex items-center gap-3 text-sm">
-                  <span
-                    className={`w-28 shrink-0 truncate sm:w-32 ${
-                      isTop ? "font-medium text-stone-900" : "text-stone-500"
-                    }`}
-                  >
-                    {PARENTING_STYLES[code].name}
-                  </span>
-                  <span className="h-2 flex-1 overflow-hidden rounded-full bg-stone-100">
+          <Card>
+            <h3 className="text-xs font-semibold tracking-wide text-stone-400 uppercase">
+              各風格得分
+            </h3>
+            <div className="mt-3 space-y-2">
+              {sortedScores.map(([code, score]) => {
+                const isTop = code === data.resultType;
+                return (
+                  <div key={code} className="flex items-center gap-3 text-sm">
                     <span
-                      className={`block h-full rounded-full transition-all duration-500 ${
-                        isTop ? "bg-amber-600" : "bg-stone-300"
+                      className={`w-20 shrink-0 truncate ${
+                        isTop ? "font-medium text-stone-900" : "text-stone-500"
                       }`}
-                      style={{ width: `${(score / maxScore) * 100}%` }}
-                    />
-                  </span>
-                  <span
-                    className={`w-6 shrink-0 text-right ${
-                      isTop ? "font-medium text-stone-900" : "text-stone-500"
-                    }`}
-                  >
-                    {score}
-                  </span>
-                </div>
-              );
-            })}
+                    >
+                      {PARENTING_STYLES[code].name}
+                    </span>
+                    <span className="h-2 flex-1 overflow-hidden rounded-full bg-stone-100">
+                      <span
+                        className={`block h-full rounded-full transition-all duration-500 ${
+                          isTop ? "bg-amber-600" : "bg-stone-300"
+                        }`}
+                        style={{ width: `${(score / maxScore) * 100}%` }}
+                      />
+                    </span>
+                    <span
+                      className={`w-6 shrink-0 text-right ${
+                        isTop ? "font-medium text-stone-900" : "text-stone-500"
+                      }`}
+                    >
+                      {score}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+
+          <div className="hidden lg:block">
+            <SecondaryButton onClick={onRestart}>重新測驗</SecondaryButton>
           </div>
         </div>
 
-        {/* 分析內容：拆成四個獨立段落，各自有標題跟圖示，方便閱讀較長的內容 */}
-        <div className="divide-y divide-stone-100">
-          {sectionList.map(
-            ({ key, label, icon }) =>
-              data.sections[key] && (
-                <div key={key} className="px-6 py-6 sm:px-10">
-                  <div className="flex items-center gap-2 text-stone-500">
-                    {icon}
-                    <h3 className="text-sm font-semibold tracking-wide">{label}</h3>
-                  </div>
-                  <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-stone-700 sm:text-base">
-                    {data.sections[key]}
-                  </p>
+        <div className="space-y-4 lg:col-span-2">
+          {data.sections.analysis && (
+            <Card>
+              <SectionBlock label="分析" icon={<IconChartBar />}>
+                <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-stone-700 sm:text-base">
+                  {data.sections.analysis}
+                </p>
+              </SectionBlock>
+            </Card>
+          )}
+
+          {data.sections.evaluation && (
+            <Card>
+              <SectionBlock label="綜合評價" icon={<IconCheckCircle />}>
+                <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-stone-700 sm:text-base">
+                  {data.sections.evaluation}
+                </p>
+              </SectionBlock>
+            </Card>
+          )}
+
+          {data.sections.suggestions.length > 0 && (
+            <Card>
+              <SectionBlock label="建議" icon={<IconLightbulb />}>
+                <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                  {data.sections.suggestions.map((item, index) => (
+                    <div key={index} className="rounded-xl border border-stone-200 bg-stone-50 p-4">
+                      <span className="text-xs font-semibold text-amber-700">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <p className="mt-1 text-sm leading-relaxed text-stone-700">{item}</p>
+                    </div>
+                  ))}
                 </div>
-              )
+              </SectionBlock>
+            </Card>
+          )}
+
+          {data.sections.activity && (
+            <Card>
+              <SectionBlock label="親子小活動" icon={<IconHeart />}>
+                <p className="mt-3 text-sm leading-relaxed whitespace-pre-wrap text-stone-700 sm:text-base">
+                  {data.sections.activity}
+                </p>
+              </SectionBlock>
+            </Card>
           )}
         </div>
       </div>
 
-      <div className="mt-6">
+      <div className="mt-4 lg:hidden">
         <SecondaryButton onClick={onRestart}>重新測驗</SecondaryButton>
       </div>
     </div>

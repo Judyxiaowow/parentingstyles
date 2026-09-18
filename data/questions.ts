@@ -1,8 +1,12 @@
 // 測驗主題資料檔。換主題時只需要改這個檔案：
 // 調整 PARENTING_STYLES（風格代號與定義），以及 QUESTIONS（題目與選項權重）即可，
 // 不會動到任何畫面或資料庫程式碼。
+//
+// 這一版刻意用「森林動物寓言」包裝題目：情境和選項都不直接講育兒，
+// 是為了避免受測者從字面猜出「哪個答案比較政治正確」而照著選，
+// 藉此讓作答更接近真實行為傾向，而不是理想答案。
 
-export const QUIZ_TITLE = "你是哪種育兒風格的人？";
+export const QUIZ_TITLE = "森林裡，你是哪一種動物爸媽？";
 
 export type ParentingStyleCode =
   | "helicopter"
@@ -27,49 +31,49 @@ export interface ParentingStyleInfo {
 
 export const PARENTING_STYLES: Record<ParentingStyleCode, ParentingStyleInfo> = {
   helicopter: {
-    name: "直升機育兒",
-    englishName: "Helicopter",
-    coreBehavior: "高度監控，密集介入孩子的每個選擇與動作，隨時在旁糾正、代勞。",
-    benefits: "孩子感受到高度關注與安全感，照顧細膩周到。",
+    name: "老鷹型",
+    englishName: "Eagle",
+    coreBehavior: "像老鷹盤旋在幼鳥上空一樣，高度監控孩子的一舉一動，隨時準備介入、糾正、代勞。",
+    benefits: "孩子感受到高度關注與保護，安全感十足。",
     risks: "孩子缺乏獨立嘗試與犯錯的機會，容易缺乏自信、抗壓性偏低。",
-    suggestion: "練習「退後一步」：先觀察，等孩子真的求助再介入，把糾正換成提問。",
+    suggestion: "練習把盤旋的高度拉高一點：先觀察，等孩子真的求助再介入，把糾正換成提問。",
   },
   lawnmower: {
-    name: "割草機育兒",
-    englishName: "Lawnmower",
-    coreBehavior: "主動預先清除孩子可能遇到的困難與挫折，確保一路暢行無阻。",
+    name: "河狸型",
+    englishName: "Beaver",
+    coreBehavior: "像河狸築壩一樣，主動預先改造環境、清除孩子可能遇到的困難，確保前方暢行無阻。",
     benefits: "孩子少走彎路，短期內挫折與衝突較少。",
     risks: "剝奪孩子練習面對挫折、解決問題的機會，遇到無法預先清除的困難時容易崩潰。",
     suggestion: "忍住不代勞，讓孩子經歷小挫折，陪他一起想辦法而不是直接幫他解決。",
   },
   tiger: {
-    name: "虎式育兒",
+    name: "老虎型",
     englishName: "Tiger",
-    coreBehavior: "高標準、重紀律，常用責罵、威脅或處罰要求孩子立即服從。",
+    coreBehavior: "像老虎一樣強勢威嚴，高標準、重紀律，常用責罵、威脅或處罰要求孩子立即服從。",
     benefits: "短期內孩子行為快速符合要求，規矩明確。",
     risks: "孩子容易因恐懼而順從而非理解，長期可能影響親子信任與情緒調節能力。",
     suggestion: "把命令換成「說明＋選擇」，用溫和但堅定的語氣取代責罵與威脅。",
   },
   permissive: {
-    name: "討好型育兒",
-    englishName: "Permissive",
-    coreBehavior: "為了讓孩子停止哭鬧或避免衝突，經常妥協、順從，也較少主動設定或堅持規則。",
+    name: "兔子型",
+    englishName: "Rabbit",
+    coreBehavior: "像兔子一樣容易緊張、傾向迴避衝突，為了讓孩子停止哭鬧經常妥協讓步，也較少堅持規則。",
     benefits: "親子當下氣氛和緩，衝突發生的頻率較低。",
     risks: "孩子難以學習面對挫折與規則界線，長期可能更容易用情緒勒索達成目的。",
     suggestion: "練習溫和而堅定地說「不」，允許孩子有情緒，但不因此改變決定。",
   },
   gentle: {
-    name: "正向溫和育兒",
-    englishName: "Gentle",
-    coreBehavior: "先同理孩子的情緒，再溫和而堅定地維持界線，引導孩子一起想辦法。",
+    name: "熊型",
+    englishName: "Bear",
+    coreBehavior: "像熊媽媽一樣，先溫暖地接住孩子的情緒，再溫和而堅定地維持界線，引導孩子一起想辦法。",
     benefits: "建立良好的親子信任與溝通，孩子情緒調節與問題解決能力較佳。",
     risks: "需要花更多耐心與時間，情緒不穩定時容易變成放任。",
     suggestion: "持續練習「先接住情緒、後談規則」的順序，必要時給自己緩衝時間再回應。",
   },
   uninvolved: {
-    name: "忽略型育兒",
-    englishName: "Uninvolved",
-    coreBehavior: "對孩子的狀況與情緒反應較少關注或回應，經常任由孩子自行處理。",
+    name: "杜鵑鳥型",
+    englishName: "Cuckoo",
+    coreBehavior: "像杜鵑鳥一樣，對孩子的狀況與情緒反應較少關注或回應，經常任由孩子自行處理。",
     benefits: "孩子有較多自主空間，較少受到過度干涉。",
     risks: "孩子容易感受到被忽視，缺乏安全感與情感連結，需要協助時得不到支持。",
     suggestion: "從固定的「專屬陪伴時間」開始，練習主動關注孩子當下的狀態與需要。",
@@ -96,288 +100,288 @@ export interface QuizQuestion {
 export const QUESTIONS: QuizQuestion[] = [
   {
     id: "q1",
-    text: "【生活自理】4 歲的孩子早上堅持要自己穿鞋，但折騰了 10 分鐘還穿不好，出門快遲到了，開始發脾氣尖叫。",
+    text: "【挑戰一：築巢】幼獸怎麼都叼不穩樹枝，急得直跳腳。",
     options: [
       {
         id: "q1-a",
-        text: "買最容易穿的魔鬼氈鞋，事先把鞋子拉開擺好角度，甚至主動幫他套上一半，確保他完全不會遇到困難",
+        text: "先備好剛好的樹枝，讓牠不費力",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q1-b",
-        text: "不管他怎麼叫，直接抱起來強行幫他穿好，邊穿邊罵：「就跟你說你還不會，快點要遲到了！」",
+        text: "斥責牠沒用，直接接手做完",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q1-c",
-        text: "算了吧，隨便他要穿哪一雙或乾脆穿拖鞋，只要他肯出門、不哭鬧就好",
+        text: "心一軟，直接幫牠做好",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q1-d",
-        text: "一直在旁邊指點：「左腳拉這裡！右腳踩下去！不對！」全程緊盯並頻繁插手微調",
+        text: "緊盯每個動作，隨時出手糾正",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q1-e",
-        text: "蹲下來抱抱他：「你想自己穿，可是穿不好讓你很沮喪對不對？」平靜後說：「我們一起做，你把腳伸進去，我幫你拉後跟。」",
+        text: "陪牠一起試，適時搭一把手",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q1-f",
-        text: "隨便他折騰，自己收拾自己的東西，完全不看他也不回應他的尖叫，任由他在門口哭",
+        text: "沒空理牠，忙自己的事",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q2",
-    text: "【公共場所崩潰】在超市買東西時，2 歲半的孩子看到喜歡的玩具大哭大鬧、躺在地上甩頭，吵著一定要買。",
+    text: "【挑戰二：莓果】幼獸看見別隻動物手上的大莓果，尖叫著非要不可。",
     options: [
       {
         id: "q2-a",
-        text: "蹲下來保持冷靜：「我知道你很想要這個玩具，買不到讓你很難過。」陪他哭完，堅定地說：「但我們今天只買菜，不買玩具。」",
+        text: "同理牠的渴望，但溫和堅持不搶",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q2-b",
-        text: "立刻拿出預先準備好的零食、平板轉移注意；還是崩潰就立刻抱著他離開現場，幫他掃除所有不適感",
+        text: "早準備好備用莓果，轉移注意",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q2-c",
-        text: "為了撫平孩子的情緒並避免打擾別人，立刻把玩具買給他，安撫：「好啦好啦不哭了，買給你。」",
+        text: "為了讓牠安靜，硬幫牠搶一顆",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q2-d",
-        text: "覺得丟臉又憤怒，抓起孩子的手大罵：「你再哭試試看！現在立刻給我起來，以後再也不帶你出來了！」",
+        text: "威嚇一聲，叼著牠就走",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q2-e",
-        text: "一看有崩潰苗頭，立刻伸手拿過玩具幫他抱著、開包裝，邊走邊向店員討好，深怕他受一丁點委屈",
+        text: "立刻護到翅膀下，對外示警",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q2-f",
-        text: "隨他躺在地上哭，自己繼續逛自己的，完全不理會也不陪伴，視若無睹地走開",
+        text: "隨牠鬧，自己繼續覓食",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q3",
-    text: "【公園社交】3 歲的孩子在公園玩溜滑梯，另一個小朋友突然衝過來插隊，還把孩子推開。",
+    text: "【挑戰三：水窪】幼獸被同伴推開，跌坐在水窪邊。",
     options: [
       {
         id: "q3-a",
-        text: "怕孩子吃虧或難過，立刻拉走自己的孩子：「那我們去玩別的，這個不玩了。」主動幫他繞過這個衝突",
+        text: "帶牠換一個沒人的水源",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q3-b",
-        text: "走上前對插隊的孩子溫和堅定說：「要排隊喔！」再對自己的孩子說：「被推嚇到了嗎？下次可以大聲說『請排隊！』」",
+        text: "溫和排解，鼓勵牠下次站穩",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q3-c",
-        text: "對自己的孩子說：「你怎麼這麼軟弱？別人推你你不會推回去嗎？不准哭！」",
+        text: "罵牠沒用，這麼容易被推倒",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q3-d",
-        text: "在旁邊看著，覺得小孩子打打鬧鬧很正常，等他們自己解決，就算自己的孩子哭了也不打算干涉",
+        text: "在旁看著，沒打算介入",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q3-e",
-        text: "密集盤旋在孩子旁邊，一看到有人靠近就立刻伸手隔開，隨時指揮：「站這邊！握緊！小心別人推你！」",
+        text: "來回盤旋，隔開所有靠近的動物",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q3-f",
-        text: "坐在遠處滑手機，連孩子被推倒了都完全沒注意到",
+        text: "忙著覓食，沒注意到牠跌倒",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q4",
-    text: "【飲食常規】5 歲的孩子吃飯極度挑食，只吃白飯和炸雞，看到蔬菜就推開碗喊：「這個好臭我不要吃！」",
+    text: "【挑戰四：挑食】幼獸聞了聞堅果，推開不吃，只肯吃某種漿果。",
     options: [
       {
         id: "q4-a",
-        text: "帶去檢查微量元素、買昂貴兒童維他命，把餐點全部打成汁、調整成免嚼食版本，確保他不會碰到不喜歡的口感",
+        text: "到處尋找，只帶牠愛吃的那種",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q4-b",
-        text: "威脅孩子：「今天不把蔬菜吃完，不准離開餐桌！也不准看卡通或吃點心！」",
+        text: "堅持吃完，不准牠離開",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q4-c",
-        text: "溫和說明：「身體需要蔬菜才會變強壯喔。」允許他先嘗試一口，若堅持不吃就平靜收走餐盤，中間不提供額外零食",
+        text: "讓牠試一口，不吃就先收起來",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q4-d",
-        text: "算了吧，孩子肯吃飯就好，不想每餐都像打仗，直接順從他，只準備他愛吃的食物",
+        text: "乾脆只準備牠愛吃的",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q4-e",
-        text: "每頓飯都把蔬菜切得極碎藏進飯裡，邊餵邊哄、追著他餵完，隨時監視他吞了幾口",
+        text: "啄碎混進食物，緊盯牠吞下",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q4-f",
-        text: "隨便他吃不吃，餐桌上放著食物，愛吃什麼吃什麼，不吃拉倒，也不關心他的營養狀況",
+        text: "食物擺著，吃不吃隨牠",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q5",
-    text: "【安全與探索】4 歲的孩子在遊樂場想要挑戰一個比較高、有難度的爬網。",
+    text: "【挑戰五：老樹】幼獸盯著一棵高聳的老樹，躍躍欲試。",
     options: [
       {
         id: "q5-a",
-        text: "在適當距離防護，鼓勵他：「你想試試看對不對？踩穩這個繩子，手握緊這裡。」讓他在安全範圍內自己試探",
+        text: "在樹下守著，讓牠自己試",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q5-b",
-        text: "覺得太危險了，直接拒絕：「這個太高了，你還太小，我們去玩旁邊安全的搖搖馬。」主動幫他排除風險",
+        text: "太危險，直接領牠去別處",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q5-c",
-        text: "緊緊跟在旁邊，手全程扶著他的腰，不斷喊：「小心！右腳踏哪裡！手握這裡！不要動我來教你！」",
+        text: "緊跟身邊，每步都伸爪扶著",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q5-d",
-        text: "命令他：「要爬可以，但你必須完全聽我的指令！我說左腳踏哪裡就踏哪裡，不准亂踩，不然立刻下來！」",
+        text: "下令，每步都得照牠說的走",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q5-e",
-        text: "隨便他，他想爬就去爬，他哭喊求救時才過去看一眼",
+        text: "隨牠爬，喊救命才抬頭看",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q5-f",
-        text: "自己坐在旁邊處理自己的事，根本沒發現孩子已經爬到了高處",
+        text: "忙自己的事，沒發現牠爬那麼高",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q6",
-    text: "【玩具分享與衝突】兩個學齡前孩子在客廳搶同一台玩具小汽車，開始拉扯並尖叫。",
+    text: "【挑戰六：樹枝】兩隻幼獸搶著同一根樹枝，拉扯尖叫。",
     options: [
       {
         id: "q6-a",
-        text: "主動衝過去幫他們分配時間（「哥哥玩 3 分鐘，弟弟玩 3 分鐘」），甚至立刻買一台一模一樣的，讓他們完全不用搶",
+        text: "立刻再找一根，分給牠們",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q6-b",
-        text: "一把搶過玩具：「吵什麼吵！兩個都不要玩了！」直接沒收放高處，並處罰兩人",
+        text: "一把沒收，誰都不准玩",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q6-c",
-        text: "蹲下描述狀況：「你們都好想玩這台車對不對？」引導：「但車子只有一台，你們覺得可以怎麼辦？」陪他們試著輪流或一起玩",
+        text: "陪牠們一起想辦法輪流",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q6-d",
-        text: "怕小的那方受委屈，立刻強迫大的那方：「你是哥哥/姊姊，本來就要讓弟弟/妹妹！快點給他！」",
+        text: "逼自己的孩子先讓步",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q6-e",
-        text: "密集介入監視，幫他們安排拿玩具的角度、設定計時器，全程站在中間擔任絕對的協調官",
+        text: "緊張介入，規定誰先咬幾口",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q6-f",
-        text: "在另一個房間做自己的事，聽見吵鬧聲也完全不予理會，讓他們自己哭喊",
+        text: "由著牠們鬧，自己理毛",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q7",
-    text: "【挫折與失敗】3 歲半的孩子積木蓋到一半倒塌了，他挫折地大哭，把積木摔得到處都是。",
+    text: "【挑戰七：倒塌】幼獸辛苦堆的巢倒塌，挫折地尖叫、踢散樹枝。",
     options: [
       {
         id: "q7-a",
-        text: "主動幫他把倒塌的積木撿起來，並幫他蓋好最難、最容易倒的底座，把會導致失敗的難題全部清空",
+        text: "立刻幫牠重堆好，順便加固",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q7-b",
-        text: "接納情緒：「積木倒了你覺得很氣對不對？」平靜後說：「倒掉很正常，是不是底座沒放平？要不要再試一次？」",
+        text: "先陪牠平復，再一起試一次",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q7-c",
-        text: "嚴厲斥責：「亂摔東西像什麼樣子！再摔以後通通不准玩！給我去牆角站著！」",
+        text: "低吼斥責牠亂踢東西",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q7-d",
-        text: "抱著他安慰：「好了好了不哭，積木壞壞！我們不玩這個了，帶你去吃冰淇淋。」",
+        text: "心疼地帶牠去玩別的",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q7-e",
-        text: "立刻坐下來「指導」他：「就跟你說過要這樣放！來，聽我的命令，拿這塊放到這裡，不准亂放！」",
+        text: "立刻接手，命令牠照做",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q7-f",
-        text: "瞥一眼說：「倒了就倒了，哭什麼哭。」然後繼續做自己的事，任由孩子發脾氣",
+        text: "瞥一眼，繼續做自己的事",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],
   },
   {
     id: "q8",
-    text: "【睡眠常規】5 歲的孩子到了睡覺時間，依然興奮地在床上跳來跳去，拒絕躺下睡覺。",
+    text: "【挑戰八：入夜】天色已暗，幼獸還在巢外跳來跳去不肯睡。",
     options: [
       {
         id: "q8-a",
-        text: "幫他準備全套助眠設備（白噪音、香氛、重力毯），一直躺在旁邊幫他按摩、講故事，順著他的所有小要求，只求他能睡著",
+        text: "鋪好舒適的巢，陪到牠睡著為止",
         weights: [{ style: "lawnmower", weight: 2 }],
       },
       {
         id: "q8-b",
-        text: "板起臉孔大聲喝斥：「立刻給我躺好！眼睛閉起來！再動一下今晚試試看！」",
+        text: "低吼命令牠立刻躺好",
         weights: [{ style: "tiger", weight: 2 }],
       },
       {
         id: "q8-c",
-        text: "溫和堅定地關燈，抱他回床上：「現在是睡覺時間，身體需要休息了。你可以抱著小熊靜靜躺著，或聽我講最後一個故事。」",
+        text: "溫和堅定地引牠回巢休息",
         weights: [{ style: "gentle", weight: 2 }],
       },
       {
         id: "q8-d",
-        text: "隨便他，他想玩到幾點就幾點，等他自己累倒在沙發上再抱他去床上",
+        text: "隨牠玩到自己累倒",
         weights: [{ style: "permissive", weight: 2 }],
       },
       {
         id: "q8-e",
-        text: "前一小時就開始密集監控睡前流程，嚴格按幾點幾分執行刷牙、穿睡衣、躺平，一有偏差就立刻介入修正",
+        text: "緊盯流程，一有偏差就糾正",
         weights: [{ style: "helicopter", weight: 2 }],
       },
       {
         id: "q8-f",
-        text: "自己在客廳看電視滑手機，不管孩子在房間裡做什麼，到了深夜發現孩子還沒睡也無所謂",
+        text: "自己先回巢，不管牠",
         weights: [{ style: "uninvolved", weight: 2 }],
       },
     ],

@@ -20,7 +20,8 @@ const MAX_RESULT_CHARS = 2000;
 interface AnalysisSections {
   analysis: string;
   evaluation: string;
-  suggestions: string;
+  // 建議拆成多條短項目（卡片式排版用），不是一整段長文字。
+  suggestions: string[];
   activity: string;
 }
 
@@ -115,7 +116,12 @@ async function generateAnalysis({
           properties: {
             analysis: { type: "string", description: "針對此人育兒風格傾向的分析" },
             evaluation: { type: "string", description: "一句綜合評價，給予正向鼓勵" },
-            suggestions: { type: "string", description: "具體、可執行且待改善的客觀建議" },
+            suggestions: {
+              type: "array",
+              items: { type: "string" },
+              description:
+                "具體、可執行且待改善的客觀建議，拆成 3 到 4 條，每條 1、2 句話、各自獨立完整（不依賴其他條目的上下文），適合各自放進一張卡片顯示",
+            },
             activity: { type: "string", description: "適合此人與孩子的親子小活動" },
           },
           required: ["analysis", "evaluation", "suggestions", "activity"],
@@ -127,11 +133,12 @@ async function generateAnalysis({
       {
         role: "system",
         content:
-          "你是親職教育顧問，會根據使用者在育兒風格測驗中的作答傾向撰寫繁體中文分析，並拆成四個獨立段落回傳：" +
-          "analysis（對此人育兒風格傾向的分析）、evaluation（一句綜合評價，給予正向鼓勵）、" +
-          "suggestions（具體、可執行且待改善的客觀建議）、activity（針對建議提供適合此人與孩子的小活動）。" +
+          "你是親職教育顧問，會根據使用者在育兒風格測驗中的作答傾向撰寫繁體中文分析，並拆成四個部分回傳：" +
+          "analysis（對此人育兒風格傾向的分析，一段文字）、evaluation（一句綜合評價，給予正向鼓勵）、" +
+          "suggestions（具體、可執行且待改善的客觀建議，拆成 3 到 4 條短項目的陣列，不是一整段長文字）、" +
+          "activity（針對建議提供適合此人與孩子的小活動，一段文字）。" +
           "語氣中立、客觀、不批判、不說教，不要使用「你很糟糕」之類的否定字眼。" +
-          `四個段落加總的全文字數（含標點）不得超過 ${MAX_RESULT_CHARS} 字，每個段落各自是完整、可獨立閱讀的一段文字，不要加標題、前綴或 markdown 符號。`,
+          `全部內容加總的字數（含標點）不得超過 ${MAX_RESULT_CHARS} 字，不要加標題、前綴或 markdown 符號。`,
       },
       {
         role: "user",
@@ -151,25 +158,39 @@ async function generateAnalysis({
     throw new Error("OpenAI 未回傳任何分析內容，請稍後再試一次。");
   }
 
-  let parsed: Partial<AnalysisSections>;
+  let parsed: Partial<{
+    analysis: string;
+    evaluation: string;
+    suggestions: unknown;
+    activity: string;
+  }>;
   try {
-    parsed = JSON.parse(raw) as Partial<AnalysisSections>;
+    parsed = JSON.parse(raw);
   } catch {
     throw new Error("OpenAI 回傳的內容格式不正確，請稍後再試一次。");
   }
 
+  const suggestions = Array.isArray(parsed.suggestions)
+    ? parsed.suggestions.filter((item): item is string => typeof item === "string" && item.trim() !== "").map((item) => item.trim())
+    : [];
+
   const sections: AnalysisSections = {
     analysis: parsed.analysis?.trim() ?? "",
     evaluation: parsed.evaluation?.trim() ?? "",
-    suggestions: parsed.suggestions?.trim() ?? "",
+    suggestions,
     activity: parsed.activity?.trim() ?? "",
   };
 
-  if (!sections.analysis && !sections.evaluation && !sections.suggestions && !sections.activity) {
+  if (!sections.analysis && !sections.evaluation && sections.suggestions.length === 0 && !sections.activity) {
     throw new Error("OpenAI 未回傳任何分析內容，請稍後再試一次。");
   }
 
-  const combined = [sections.analysis, sections.evaluation, sections.suggestions, sections.activity]
+  const combined = [
+    sections.analysis,
+    sections.evaluation,
+    sections.suggestions.map((item, index) => `${index + 1}. ${item}`).join("\n"),
+    sections.activity,
+  ]
     .filter(Boolean)
     .join("\n\n");
 
